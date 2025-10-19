@@ -22,6 +22,7 @@ for (const { op, arg } of program) {
 
   switch (op) {
     case "PUSH": {
+      // -- x
       if (typeof arg === "undefined") {
         throw new Error("No argument given for PUSH");
       }
@@ -29,32 +30,13 @@ for (const { op, arg } of program) {
       stack.push(arg);
       break;
     }
-    case "ADD": {
-      // a,b -- a+b
-      const b = stack.pop();
-      const a = stack.pop();
-
-      if (typeof a === "undefined" || typeof b === "undefined") {
-        throw new Error("Stack underflow: not enough values to ADD");
-      }
-
-      stack.push(a + b);
-      break;
-    }
-    case "SUB": {
-      // a,b -- a-b
-      const b = stack.pop();
-      const a = stack.pop();
-
-      if (typeof a === "undefined" || typeof b === "undefined") {
-        throw new Error("Stack underflow: not enough values to SUB");
-      }
-
-      stack.push(a - b);
+    case "POP": {
+      // x --
+      stack.pop();
       break;
     }
     case "DUP": {
-      // a -- a,a
+      // x -- x x
       const a = stack.pop();
 
       if (typeof a === "undefined") {
@@ -66,21 +48,68 @@ for (const { op, arg } of program) {
       break;
     }
     case "SWAP": {
-      // a,b -- b,a
+      // a b -- b a
       const b = stack.pop();
       const a = stack.pop();
 
-
       if (typeof a === "undefined" || typeof b === "undefined") {
-        throw new Error("Stack underflow: not enough values to ADD");
+        throw new Error("Stack underflow: not enough values to SWAP");
       }
 
       stack.push(b);
       stack.push(a);
       break;
     }
+    case "ADD": {
+      // a b -- a+b
+      const b = stack.pop();
+      const a = stack.pop();
+
+      if (typeof a === "undefined" || typeof b === "undefined") {
+        throw new Error("Stack underflow: not enough values to ADD");
+      }
+
+      stack.push(a + b);
+      break;
+    }
+    case "SUB": {
+      // a b -- a-b
+      const b = stack.pop();
+      const a = stack.pop();
+
+      if (typeof a === "undefined" || typeof b === "undefined") {
+        throw new Error("Stack underflow: not enough values to SUB");
+      }
+
+      stack.push(a - b);
+      break;
+    }
+    case "MUL": {
+      // a b -- a*b
+      const b = stack.pop();
+      const a = stack.pop();
+
+      if (typeof a === "undefined" || typeof b === "undefined") {
+        throw new Error("Stack underflow: not enough values to MUL");
+      }
+
+      stack.push(a * b);
+      break;
+    }
+    case "DIV": {
+      // a b -- a/b
+      const b = stack.pop();
+      const a = stack.pop();
+
+      if (typeof a === "undefined" || typeof b === "undefined") {
+        throw new Error("Stack underflow: not enough values to DIV");
+      }
+
+      stack.push(a / b);
+      break;
+    }
     case "PRINT": {
-      // a --
+      // x --
       console.log(stack.pop());
       break;
     }
