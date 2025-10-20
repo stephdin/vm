@@ -1,3 +1,3 @@
 # vm
 
-a small stack-based vm written in TypeScript
+A small stack-based VM written in TypeScript
