@@ -150,7 +150,7 @@ function run(program: Array<Instruction>) {
           throw new Error("Stack underflow: not enough values for NEQ");
         }
 
-        stack.push(a <= b ? 1 : 0);
+        stack.push(a != b ? 1 : 0);
         break;
       }
 
@@ -342,4 +342,4 @@ console.log(`running program 2 took ${t4 - t3} milliseconds.`);
 const t5 = performance.now();
 run(program3);
 const t6 = performance.now();
-console.log(`running program 2 took ${t6 - t5} milliseconds.`);
+console.log(`running program 3 took ${t6 - t5} milliseconds.`);
