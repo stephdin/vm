@@ -17,7 +17,11 @@ const program: Array<Instruction> = [
 
 const stack: Array<number> = [];
 
-for (const { op, arg } of program) {
+let pc: number = 0;
+let halted: boolean = false;
+
+while (!halted && pc < program.length) {
+  const { op, arg } = program[pc];
   const oldStack = [...stack];
 
   switch (op) {
@@ -224,7 +228,7 @@ for (const { op, arg } of program) {
     /* Control Flow */
     case "HALT": {
       console.log("Halting program");
-      // TODO: exit the application
+      halted = true;
       break;
     }
     default:
@@ -232,4 +236,7 @@ for (const { op, arg } of program) {
   }
 
   console.log(op, arg ? arg : "", ";", oldStack, "--", stack);
+
+  //increment program counter
+  pc++;
 }
