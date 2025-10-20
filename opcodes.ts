@@ -1,0 +1,29 @@
+export const OPCODES = {
+  /* Stack */
+  PUSH: 0x01,
+  POP: 0x02,
+  DUP: 0x03,
+  SWAP: 0x04,
+  /* Arithmetic */
+  ADD: 0x11,
+  SUB: 0x12,
+  MUL: 0x13,
+  DIV: 0x14,
+  MOD: 0x15,
+  /* Logic */
+  EQ: 0x21,
+  NEQ: 0x22,
+  LT: 0x23,
+  LTE: 0x24,
+  GT: 0x25,
+  GTE: 0x26,
+  /* I/O */
+  PRINT: 0x31,
+  /* Control flow */
+  JMP: 0x41,
+  JZ: 0x42,
+  JNZ: 0x43,
+  CALL: 0x44,
+  RET: 0x45,
+  HALT: 0xFF,
+};
