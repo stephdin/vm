@@ -28,3 +28,13 @@ A small stack-based VM written in TypeScript
 | `CALL`     | `arg` (number) | Push return address and jump.              | (no data-stack change; call stack: `-- retAddr`) |
 | `RET`      | –              | Pop return address and jump back.          | (no data-stack change; call stack: `retAddr --`) |
 | `HALT`     | –              | Stop execution.                            | (no stack change)                                |
+
+## Using with Deno
+
+Make sure Deno is installed (https://deno.com/)
+
+Basic run:
+
+```pwsh
+deno run vm.ts
+```
