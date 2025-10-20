@@ -4,6 +4,7 @@ type Instruction = { op: string; arg?: number };
 
 function run(program: Array<Instruction>) {
   const stack: Array<number> = [];
+  const callStack: Array<number> = [];
 
   let pc: number = 0;
   let halted: boolean = false;
@@ -232,7 +233,7 @@ function run(program: Array<Instruction>) {
 
         if (cond === 0) {
           pc = arg;
-          continue;
+          continue; // skip program counter increment
         }
         break;
       }
@@ -246,9 +247,28 @@ function run(program: Array<Instruction>) {
 
         if (cond !== 0) {
           pc = arg;
-          continue;
+          continue; // skip program counter increment
         }
         break;
+      }
+
+      case "CALL": {
+        if (typeof arg !== "number")
+          throw new Error("CALL requires a target address");
+
+        callStack.push(pc + 1);
+        pc = arg;
+        continue; // skip program counter increment
+      }
+
+      case "RET": {
+        const retAddr = callStack.pop();
+
+        if (typeof retAddr === "undefined")
+          throw new Error("Call stack underflow on RET");
+
+        pc = retAddr;
+        continue; // skip program counter increment
       }
 
       case "HALT": {
@@ -296,6 +316,19 @@ const program2: Instruction[] = [
   { op: "HALT" },
 ];
 
+const program3: Instruction[] = [
+  // main
+  { op: "PUSH", arg: 5 },
+  { op: "CALL", arg: 4 }, // call to address 4
+  { op: "PRINT" },
+  { op: "HALT" },
+
+  // function square(x)
+  { op: "DUP" },
+  { op: "MUL" },
+  { op: "RET" },
+];
+
 const t0 = performance.now();
 run(program1);
 const t1 = performance.now();
@@ -305,3 +338,8 @@ const t3 = performance.now();
 run(program2);
 const t4 = performance.now();
 console.log(`running program 2 took ${t4 - t3} milliseconds.`);
+
+const t5 = performance.now();
+run(program3);
+const t6 = performance.now();
+console.log(`running program 2 took ${t6 - t5} milliseconds.`);
