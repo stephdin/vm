@@ -21,8 +21,10 @@ for (const { op, arg } of program) {
   const oldStack = [...stack];
 
   switch (op) {
+    /* Stack  */
+
+    /* -- x */
     case "PUSH": {
-      // -- x
       if (typeof arg === "undefined") {
         throw new Error("No argument given for PUSH");
       }
@@ -30,13 +32,15 @@ for (const { op, arg } of program) {
       stack.push(arg);
       break;
     }
+
+    /* x -- */
     case "POP": {
-      // x --
       stack.pop();
       break;
     }
+
+    /* x -- x x */
     case "DUP": {
-      // x -- x x
       const a = stack.pop();
 
       if (typeof a === "undefined") {
@@ -47,8 +51,9 @@ for (const { op, arg } of program) {
       stack.push(a);
       break;
     }
+
+    /* a b -- b a */
     case "SWAP": {
-      // a b -- b a
       const b = stack.pop();
       const a = stack.pop();
 
@@ -60,8 +65,11 @@ for (const { op, arg } of program) {
       stack.push(a);
       break;
     }
+
+    /* Arithmetic */
+
+    /* a b -- a+b */
     case "ADD": {
-      // a b -- a+b
       const b = stack.pop();
       const a = stack.pop();
 
@@ -72,8 +80,9 @@ for (const { op, arg } of program) {
       stack.push(a + b);
       break;
     }
+
+    /* a b -- a-b */
     case "SUB": {
-      // a b -- a-b
       const b = stack.pop();
       const a = stack.pop();
 
@@ -84,8 +93,9 @@ for (const { op, arg } of program) {
       stack.push(a - b);
       break;
     }
+
+    /* a b -- a*b */
     case "MUL": {
-      // a b -- a*b
       const b = stack.pop();
       const a = stack.pop();
 
@@ -96,8 +106,9 @@ for (const { op, arg } of program) {
       stack.push(a * b);
       break;
     }
+
+    /* a b -- a/b */
     case "DIV": {
-      // a b -- a/b
       const b = stack.pop();
       const a = stack.pop();
 
@@ -108,14 +119,112 @@ for (const { op, arg } of program) {
       stack.push(a / b);
       break;
     }
+
+    /* a b -- a%b */
+    case "MOD": {
+      const b = stack.pop();
+      const a = stack.pop();
+
+      if (typeof a === "undefined" || typeof b === "undefined") {
+        throw new Error("Stack underflow: not enough values to MOD");
+      }
+
+      stack.push(a % b);
+      break;
+    }
+
+    /* Logic */
+
+    /* a b -- (a==b ? 1 : 0) */
+    case "EQ": {
+      const b = stack.pop();
+      const a = stack.pop();
+
+      if (typeof a === "undefined" || typeof b === "undefined") {
+        throw new Error("Stack underflow: not enough values for EQ");
+      }
+
+      stack.push(a == b ? 1 : 0);
+      break;
+    }
+
+    /* a b -- (a!=b ? 1 : 0) */
+    case "NEQ": {
+      const b = stack.pop();
+      const a = stack.pop();
+
+      if (typeof a === "undefined" || typeof b === "undefined") {
+        throw new Error("Stack underflow: not enough values for NEQ");
+      }
+
+      stack.push(a <= b ? 1 : 0);
+      break;
+    }
+
+    /* a b -- (a<b ? 1 : 0) */
+    case "LT": {
+      const b = stack.pop();
+      const a = stack.pop();
+
+      if (typeof a === "undefined" || typeof b === "undefined") {
+        throw new Error("Stack underflow: not enough values for LT");
+      }
+
+      stack.push(a < b ? 1 : 0);
+      break;
+    }
+
+    /* a b -- (a<=b ? 1 : 0) */
+    case "LTE": {
+      const b = stack.pop();
+      const a = stack.pop();
+
+      if (typeof a === "undefined" || typeof b === "undefined") {
+        throw new Error("Stack underflow: not enough values for LTE");
+      }
+
+      stack.push(a <= b ? 1 : 0);
+      break;
+    }
+
+    /* a b -- (a>b ? 1 : 0) */
+    case "GT": {
+      const b = stack.pop();
+      const a = stack.pop();
+
+      if (typeof a === "undefined" || typeof b === "undefined") {
+        throw new Error("Stack underflow: not enough values for GT");
+      }
+
+      stack.push(a > b ? 1 : 0);
+      break;
+    }
+
+    /* a b -- (a>=b ? 1 : 0) */
+    case "GTE": {
+      const b = stack.pop();
+      const a = stack.pop();
+
+      if (typeof a === "undefined" || typeof b === "undefined") {
+        throw new Error("Stack underflow: not enough values for GTE");
+      }
+
+      stack.push(a >= b ? 1 : 0);
+      break;
+    }
+
+    /* I/O */
+
+    /* x -- */
     case "PRINT": {
-      // x --
       console.log(stack.pop());
       break;
     }
+
+    /* Control Flow */
     case "HALT": {
       console.log("Halting program");
-      // todo exit application
+      // TODO: exit the application
       break;
     }
     default:
