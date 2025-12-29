@@ -7,10 +7,10 @@ for (const path of paths) {
   console.log("running", path);
 
   const asm = Deno.readTextFileSync(path);
-  const program = assemble(asm);
+  const instructions = assemble(asm);
 
   const t0 = performance.now();
-  run(program);
+  run(instructions);
   const t1 = performance.now();
 
   console.log(`finished in ${t1 - t0} milliseconds. \n`);

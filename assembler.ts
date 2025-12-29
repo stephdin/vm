@@ -1,4 +1,5 @@
-type Instruction = { op: string; arg?: number };
+import { OPCODES } from "./opcodes.ts";
+import { Instruction, Opcode } from "./types.ts";
 
 export function assemble(source: string) {
   const lines = source.split("\n");
@@ -33,15 +34,26 @@ export function assemble(source: string) {
     // skip empty lines and ignore comments and labels
     if (line == "" || line.startsWith(";") || line.endsWith(":")) continue;
 
-    const [op, arg] = line.split(" ");
+    const [opString, argString] = line.split(" ");
+
+    // check for correct opcodes while assembling
+    if (!(opString in OPCODES)) {
+      throw new Error("unknown Opcode");
+    }
 
     // replace labels with actual position
-    if (op === "CALL") {
-      instructions.push({ op, arg: labels.get(arg) });
+    if (OPCODES[opString as Opcode] === OPCODES.CALL) {
+      instructions.push({
+        op: OPCODES[opString as Opcode],
+        arg: labels.get(argString),
+      });
       continue;
     }
 
-    instructions.push({ op, arg: parseInt(arg) });
+    instructions.push({
+      op: OPCODES[opString as Opcode],
+      arg: parseInt(argString),
+    });
   }
 
   return instructions;

@@ -26,4 +26,4 @@ export const OPCODES = {
   CALL: 0x44,
   RET: 0x45,
   HALT: 0xFF,
-};
+} as const;

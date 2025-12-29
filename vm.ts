@@ -1,6 +1,7 @@
-const DEBUG = false;
+import { OPCODES } from "./opcodes.ts";
+import { Instruction } from "./types.ts";
 
-type Instruction = { op: string; arg?: number };
+const DEBUG = false;
 
 export function run(program: Array<Instruction>) {
   const stack: Array<number> = [];
@@ -17,7 +18,7 @@ export function run(program: Array<Instruction>) {
       /* Stack  */
 
       /* -- x */
-      case "PUSH": {
+      case OPCODES.PUSH: {
         if (typeof arg === "undefined") {
           throw new Error("No argument given for PUSH");
         }
@@ -27,13 +28,13 @@ export function run(program: Array<Instruction>) {
       }
 
       /* x -- */
-      case "POP": {
+      case OPCODES.POP: {
         stack.pop();
         break;
       }
 
       /* x -- x x */
-      case "DUP": {
+      case OPCODES.DUP: {
         const a = stack.pop();
 
         if (typeof a === "undefined") {
@@ -46,7 +47,7 @@ export function run(program: Array<Instruction>) {
       }
 
       /* a b -- b a */
-      case "SWAP": {
+      case OPCODES.SWAP: {
         const b = stack.pop();
         const a = stack.pop();
 
@@ -62,7 +63,7 @@ export function run(program: Array<Instruction>) {
       /* Arithmetic */
 
       /* a b -- a+b */
-      case "ADD": {
+      case OPCODES.ADD: {
         const b = stack.pop();
         const a = stack.pop();
 
@@ -75,7 +76,7 @@ export function run(program: Array<Instruction>) {
       }
 
       /* a b -- a-b */
-      case "SUB": {
+      case OPCODES.SUB: {
         const b = stack.pop();
         const a = stack.pop();
 
@@ -88,7 +89,7 @@ export function run(program: Array<Instruction>) {
       }
 
       /* a b -- a*b */
-      case "MUL": {
+      case OPCODES.MUL: {
         const b = stack.pop();
         const a = stack.pop();
 
@@ -101,7 +102,7 @@ export function run(program: Array<Instruction>) {
       }
 
       /* a b -- a/b */
-      case "DIV": {
+      case OPCODES.DIV: {
         const b = stack.pop();
         const a = stack.pop();
 
@@ -114,7 +115,7 @@ export function run(program: Array<Instruction>) {
       }
 
       /* a b -- a%b */
-      case "MOD": {
+      case OPCODES.MOD: {
         const b = stack.pop();
         const a = stack.pop();
 
@@ -129,7 +130,7 @@ export function run(program: Array<Instruction>) {
       /* Logic */
 
       /* a b -- (a==b ? 1 : 0) */
-      case "EQ": {
+      case OPCODES.EQ: {
         const b = stack.pop();
         const a = stack.pop();
 
@@ -142,7 +143,7 @@ export function run(program: Array<Instruction>) {
       }
 
       /* a b -- (a!=b ? 1 : 0) */
-      case "NEQ": {
+      case OPCODES.NEQ: {
         const b = stack.pop();
         const a = stack.pop();
 
@@ -155,7 +156,7 @@ export function run(program: Array<Instruction>) {
       }
 
       /* a b -- (a<b ? 1 : 0) */
-      case "LT": {
+      case OPCODES.LT: {
         const b = stack.pop();
         const a = stack.pop();
 
@@ -168,7 +169,7 @@ export function run(program: Array<Instruction>) {
       }
 
       /* a b -- (a<=b ? 1 : 0) */
-      case "LTE": {
+      case OPCODES.LTE: {
         const b = stack.pop();
         const a = stack.pop();
 
@@ -181,7 +182,7 @@ export function run(program: Array<Instruction>) {
       }
 
       /* a b -- (a>b ? 1 : 0) */
-      case "GT": {
+      case OPCODES.GT: {
         const b = stack.pop();
         const a = stack.pop();
 
@@ -194,7 +195,7 @@ export function run(program: Array<Instruction>) {
       }
 
       /* a b -- (a>=b ? 1 : 0) */
-      case "GTE": {
+      case OPCODES.GTE: {
         const b = stack.pop();
         const a = stack.pop();
 
@@ -209,14 +210,14 @@ export function run(program: Array<Instruction>) {
       /* I/O */
 
       /* x -- */
-      case "PRINT": {
+      case OPCODES.PRINT: {
         console.log(stack.pop());
         break;
       }
 
       /* Control Flow */
 
-      case "JMP": {
+      case OPCODES.JMP: {
         if (typeof arg !== "number") {
           throw new Error("JMP needs a numeric target address");
         }
@@ -224,7 +225,7 @@ export function run(program: Array<Instruction>) {
         continue; // skip program counter increment
       }
 
-      case "JZ": {
+      case OPCODES.JZ: {
         if (typeof arg !== "number") {
           throw new Error("JZ needs a numeric target address");
         }
@@ -238,7 +239,7 @@ export function run(program: Array<Instruction>) {
         break;
       }
 
-      case "JNZ": {
+      case OPCODES.JNZ: {
         if (typeof arg !== "number") {
           throw new Error("JNZ needs a numeric target address");
         }
@@ -252,26 +253,28 @@ export function run(program: Array<Instruction>) {
         break;
       }
 
-      case "CALL": {
-        if (typeof arg !== "number")
+      case OPCODES.CALL: {
+        if (typeof arg !== "number") {
           throw new Error("CALL requires a target address");
+        }
 
         callStack.push(pc + 1);
         pc = arg;
         continue; // skip program counter increment
       }
 
-      case "RET": {
+      case OPCODES.RET: {
         const retAddr = callStack.pop();
 
-        if (typeof retAddr === "undefined")
+        if (typeof retAddr === "undefined") {
           throw new Error("Call stack underflow on RET");
+        }
 
         pc = retAddr;
         continue; // skip program counter increment
       }
 
-      case "HALT": {
+      case OPCODES.HALT: {
         if (DEBUG) console.log("Halting program");
         halted = true;
         break;
