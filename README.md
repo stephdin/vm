@@ -36,5 +36,5 @@ Make sure Deno is installed (https://deno.com/)
 Basic run:
 
 ```pwsh
-deno run vm.ts
+deno run --allow-read main.ts
 ```

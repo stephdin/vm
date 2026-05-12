@@ -56,5 +56,14 @@ export function assemble(source: string) {
     });
   }
 
+  const bin: Array<number> = [];
+
+  instructions.forEach(({ op, arg }) => {
+    bin.push(op);
+  });
+
+  const bytes = new Uint8Array(bin);
+  console.log(bytes)
+
   return instructions;
 }
