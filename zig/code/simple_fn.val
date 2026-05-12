@@ -1,0 +1,8 @@
+fn add(a, b) {
+    val c = a + b
+    return c
+}
+
+val d = add(2, 3)
+
+print(d)
